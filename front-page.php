@@ -1,15 +1,24 @@
 <?php get_header(); ?>
 
+<!-- SVG clipPath para curva del hero -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+        <clipPath id="hero-clip" clipPathUnits="objectBoundingBox">
+            <path d="M0,0 L1,0 L1,0.88 Q0.5,1 0,0.88 Z"/>
+        </clipPath>
+    </defs>
+</svg>
+
 <!-- Hero Section -->
 <section class="hero" style="background-image: url('<?php echo esc_url(get_template_directory_uri()); ?>/assets/images/banner1.png');">
     <div class="hero-overlay"></div>
     <div class="container hero-content">
-        <h1>Optimiza legalmente tus impuestos<br><em>y protege tu crecimiento financiero.</em></h1>
-        <p class="hero-description">
+        <h1 class="hero-animate-title">Optimiza legalmente tus impuestos<br><em>y protege tu crecimiento financiero.</em></h1>
+        <p class="hero-description hero-animate-desc">
             Transformamos la carga tributaria en una estrategia de crecimiento
             mediante planificación fiscal preventiva.
         </p>
-        <div class="hero-buttons">
+        <div class="hero-buttons hero-animate-btns">
             <a href="#contacto" class="btn btn-primary">Agenda tu asesoría</a>
             <a href="https://wa.me/59399123456" class="btn btn-outline" target="_blank" rel="noopener">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.625.846 5.059 2.284 7.034L.789 23.492a.5.5 0 00.611.611l4.458-1.495A11.952 11.952 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-2.143 0-4.144-.663-5.787-1.8l-.404-.263-2.645.887.887-2.645-.263-.404A9.935 9.935 0 012 12C2 6.486 6.486 2 12 2s10 4.486 10 10-4.486 10-10 10z"/></svg>
@@ -17,42 +26,67 @@
             </a>
         </div>
     </div>
+    <div class="hero-curve"></div>
 </section>
 
-<!-- Sobre Nosotros -->
-<section class="sobre-nosotros" id="sobre-nosotros">
+<!-- Infórmate -->
+<section class="informate" id="informate">
     <div class="container">
-        <div class="section-header">
-            <h2>Sobre Nosotros</h2>
-            <p class="section-subtitle"><em>Estrategia Contable y Tributaria</em></p>
+        <div class="section-header" data-animate="fade-up">
+            <h2>Infórmate</h2>
+            <p class="section-subtitle"><em>Artículos y novedades tributarias</em></p>
         </div>
-        <div class="sobre-nosotros-content">
-            <div class="sobre-nosotros-text">
-                <p>
-                    En <strong>AD Cont</strong> brindamos servicio contable y Tributario con enfoque estratégico.
-                </p>
-                <p>
-                    Nuestro especialidad es la planificación tributaria preventiva, ayudando a
-                    empresarios y profesionales de <strong>Guayaquil</strong> a anticiparse y tomar
-                    decisiones inteligentes dentro del marco legal ecuatoriano.
-                </p>
+        <?php
+        $informate_query = new WP_Query([
+            'post_status'    => 'publish',
+            'posts_per_page' => 6,
+            'orderby'        => 'date',
+            'order'          => 'DESC',
+        ]);
+        if ( $informate_query->have_posts() ) : ?>
+        <div class="carousel-wrapper" data-animate="fade-up">
+            <div class="carousel-track-outer">
+                <div class="carousel-track">
+                    <?php while ( $informate_query->have_posts() ) : $informate_query->the_post(); ?>
+                    <article class="post-card<?php echo has_post_thumbnail() ? '' : ' no-thumb'; ?>">
+                        <?php if ( has_post_thumbnail() ) : ?>
+                        <a href="<?php the_permalink(); ?>" class="post-card-thumb" tabindex="-1" aria-hidden="true">
+                            <?php the_post_thumbnail( 'large', [ 'loading' => 'lazy' ] ); ?>
+                        </a>
+                        <?php endif; ?>
+                        <div class="post-card-body">
+                            <span class="post-card-date"><?php echo get_the_date( 'd M Y' ); ?></span>
+                            <h3 class="post-card-title">
+                                <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
+                            </h3>
+                            <p class="post-card-excerpt"><?php echo wp_trim_words( get_the_excerpt(), 30, '…' ); ?></p>
+                            <a href="<?php the_permalink(); ?>" class="post-card-link">Leer más →</a>
+                        </div>
+                    </article>
+                    <?php endwhile; wp_reset_postdata(); ?>
+                </div>
             </div>
-            <div class="sobre-nosotros-image">
-                <img src="<?php echo esc_url(get_template_directory_uri()); ?>/assets/images/sobre-nosotros.png" alt="Oficina AD Cont" loading="lazy">
+            <div class="carousel-controls">
+                <button class="carousel-btn carousel-prev" aria-label="Anterior">&#8592;</button>
+                <span class="carousel-counter"></span>
+                <button class="carousel-btn carousel-next" aria-label="Siguiente">&#8594;</button>
             </div>
         </div>
+        <?php else : ?>
+        <p class="informate-empty">Próximamente publicaremos artículos de interés tributario.</p>
+        <?php endif; ?>
     </div>
 </section>
 
 <!-- Servicios -->
 <section class="servicios" id="servicios">
     <div class="container">
-        <div class="section-header">
+        <div class="section-header" data-animate="fade-up">
             <h2>Nuestros Servicios</h2>
             <p class="section-subtitle"><em>Soluciones a tu medida</em></p>
         </div>
         <div class="servicios-grid">
-            <div class="servicio-card">
+            <div class="servicio-card" data-animate="fade-up" data-delay="0">
                 <div class="servicio-icon">
                     <!-- Planificación: portapapeles con gráfico de barras ascendente -->
                     <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -68,7 +102,7 @@
                 <h3>Planificación Tributaria Estratégica</h3>
                 <p>Optimizamos tu carga fiscal de forma legal, anticipándonos a los procesos del SRI.</p>
             </div>
-            <div class="servicio-card">
+            <div class="servicio-card" data-animate="fade-up" data-delay="120">
                 <div class="servicio-icon">
                     <!-- Integración: nodos conectados / red empresarial -->
                     <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -89,7 +123,7 @@
                 <h3>Integración de Grupo Tributario</h3>
                 <p>Consolidamos la información fiscal de tu grupo empresarial para máxima eficiencia.</p>
             </div>
-            <div class="servicio-card">
+            <div class="servicio-card" data-animate="fade-up" data-delay="240">
                 <div class="servicio-icon">
                     <!-- Exoneración: auto vista frontal -->
                     <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -126,7 +160,7 @@
                 <h3>Exoneración y Matrices Tributarias</h3>
                 <p>Te asesoramos en la reducción lícita de tributos mediante exoneraciones vigentes.</p>
             </div>
-            <div class="servicio-card">
+            <div class="servicio-card" data-animate="fade-up" data-delay="360">
                 <div class="servicio-icon">
                     <!-- Devolución: moneda con flecha de retorno -->
                     <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -149,10 +183,10 @@
 <section class="mision" id="mision">
     <div class="mision-overlay"></div>
     <div class="container mision-content">
-        <div class="section-header">
+        <div class="section-header" data-animate="fade-up">
             <h2>Nuestra Misión</h2>
         </div>
-        <p>
+        <p data-animate="fade-up" data-delay="150">
             Brindar soluciones contables y tributarias estratégicas que permitan a nuestros
             clientes optimizar sus recursos, cumplir con la normativa vigente y alcanzar
             sus objetivos financieros con tranquilidad y confianza.

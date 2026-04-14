@@ -49,4 +49,57 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     }
+
+    // Carrusel de posts — un post a la vez
+    document.querySelectorAll('.carousel-wrapper').forEach(function (wrapper) {
+        var track   = wrapper.querySelector('.carousel-track');
+        var prev    = wrapper.querySelector('.carousel-prev');
+        var next    = wrapper.querySelector('.carousel-next');
+        var counter = wrapper.querySelector('.carousel-counter');
+        var cards   = Array.from(track.querySelectorAll('.post-card'));
+        if (!cards.length) return;
+
+        var current = 0;
+        var total   = cards.length;
+
+        function goTo(index) {
+            current = Math.max(0, Math.min(index, total - 1));
+            track.style.transform = 'translateX(-' + (current * 100) + '%)';
+            prev.disabled = current === 0;
+            next.disabled = current === total - 1;
+            if (counter) counter.textContent = (current + 1) + ' / ' + total;
+        }
+
+        prev.addEventListener('click', function () { goTo(current - 1); });
+        next.addEventListener('click', function () { goTo(current + 1); });
+
+        goTo(0);
+    });
+
+    // Scroll-triggered animations via IntersectionObserver
+    var animatedEls = document.querySelectorAll('[data-animate]');
+    if (animatedEls.length && 'IntersectionObserver' in window) {
+        var observer = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+                if (entry.isIntersecting) {
+                    var el = entry.target;
+                    var delay = el.getAttribute('data-delay');
+                    if (delay) {
+                        el.style.animationDelay = delay + 'ms';
+                    }
+                    el.classList.add('is-visible');
+                    observer.unobserve(el);
+                }
+            });
+        }, { threshold: 0.12 });
+
+        animatedEls.forEach(function (el) {
+            observer.observe(el);
+        });
+    } else {
+        // Fallback: show everything immediately
+        animatedEls.forEach(function (el) {
+            el.classList.add('is-visible');
+        });
+    }
 });

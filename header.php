@@ -39,7 +39,7 @@
 function mi_plantilla_fallback_menu() {
     echo '<ul class="nav-list">';
     echo '<li><a href="' . esc_url(home_url('/')) . '">Inicio</a></li>';
-    echo '<li><a href="#sobre-nosotros">Sobre Nosotros</a></li>';
+    echo '<li><a href="#informate">Infórmate</a></li>';
     echo '<li><a href="#servicios">Servicios</a></li>';
     echo '<li><a href="#mision">Misión</a></li>';
     echo '<li><a href="#contacto">Contacto</a></li>';
