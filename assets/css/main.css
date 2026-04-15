@@ -654,10 +654,13 @@ ul {
    ========================================= */
 .mision {
     position: relative;
-    padding: 100px 0;
+    margin-top: -80px;
+    padding: 170px 0 100px;
     background:
         url('../images/mision-bg.jpg') center/cover no-repeat;
     background-color: var(--color-green-dark);
+    clip-path: url(#mision-clip);
+    z-index: 1;
 }
 
 .mision-overlay {

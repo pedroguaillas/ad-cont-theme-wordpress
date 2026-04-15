@@ -179,6 +179,15 @@
     </div>
 </section>
 
+<!-- SVG clipPath para curva superior de Misión -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+        <clipPath id="mision-clip" clipPathUnits="objectBoundingBox">
+            <path d="M0,0.2 Q0.5,0 1,0.2 L1,1 L0,1 Z"/>
+        </clipPath>
+    </defs>
+</svg>
+
 <!-- Misión -->
 <section class="mision" id="mision">
     <div class="mision-overlay"></div>
