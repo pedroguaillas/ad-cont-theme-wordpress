@@ -55,19 +55,36 @@ document.addEventListener('DOMContentLoaded', function () {
         var track   = wrapper.querySelector('.carousel-track');
         var prev    = wrapper.querySelector('.carousel-prev');
         var next    = wrapper.querySelector('.carousel-next');
-        var counter = wrapper.querySelector('.carousel-counter');
+        var dotsEl  = wrapper.querySelector('.carousel-dots');
         var cards   = Array.from(track.querySelectorAll('.post-card'));
         if (!cards.length) return;
 
         var current = 0;
         var total   = cards.length;
 
+        // Generar dots
+        var dots = [];
+        if (dotsEl) {
+            for (var i = 0; i < total; i++) {
+                var dot = document.createElement('button');
+                dot.className = 'carousel-dot';
+                dot.setAttribute('aria-label', 'Ir a artículo ' + (i + 1));
+                (function (idx) {
+                    dot.addEventListener('click', function () { goTo(idx); });
+                })(i);
+                dotsEl.appendChild(dot);
+                dots.push(dot);
+            }
+        }
+
         function goTo(index) {
             current = Math.max(0, Math.min(index, total - 1));
             track.style.transform = 'translateX(-' + (current * 100) + '%)';
             prev.disabled = current === 0;
             next.disabled = current === total - 1;
-            if (counter) counter.textContent = (current + 1) + ' / ' + total;
+            dots.forEach(function (d, i) {
+                d.classList.toggle('active', i === current);
+            });
         }
 
         prev.addEventListener('click', function () { goTo(current - 1); });

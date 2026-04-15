@@ -52,6 +52,12 @@
                         <?php if ( has_post_thumbnail() ) : ?>
                         <a href="<?php the_permalink(); ?>" class="post-card-thumb" tabindex="-1" aria-hidden="true">
                             <?php the_post_thumbnail( 'large', [ 'loading' => 'lazy' ] ); ?>
+                            <?php
+                            $cats = get_the_category();
+                            if ( $cats ) :
+                            ?>
+                            <span class="post-card-category"><?php echo esc_html( $cats[0]->name ); ?></span>
+                            <?php endif; ?>
                         </a>
                         <?php endif; ?>
                         <div class="post-card-body">
@@ -60,7 +66,7 @@
                                 <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
                             </h3>
                             <p class="post-card-excerpt"><?php echo wp_trim_words( get_the_excerpt(), 30, '…' ); ?></p>
-                            <a href="<?php the_permalink(); ?>" class="post-card-link">Leer más →</a>
+                            <a href="<?php the_permalink(); ?>" class="post-card-link">Leer más</a>
                         </div>
                     </article>
                     <?php endwhile; wp_reset_postdata(); ?>
@@ -68,7 +74,7 @@
             </div>
             <div class="carousel-controls">
                 <button class="carousel-btn carousel-prev" aria-label="Anterior">&#8592;</button>
-                <span class="carousel-counter"></span>
+                <div class="carousel-dots" role="tablist" aria-label="Artículos"></div>
                 <button class="carousel-btn carousel-next" aria-label="Siguiente">&#8594;</button>
             </div>
         </div>
